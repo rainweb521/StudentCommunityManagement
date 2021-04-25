@@ -1,0 +1,127 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="Admin">
+    <resultMap id="AdminMap" type="Admin">
+        <id column="id" property="id" jdbcType="VARCHAR"/>
+        <result column="pwd" property="pwd" jdbcType="VARCHAR"/>
+    </resultMap>
+    <resultMap id="StudentMap" type="Student">
+        <id column="id" property="id" jdbcType="VARCHAR"/>
+        <result column="pwd" property="pwd" jdbcType="VARCHAR"/>
+        <result column="name" property="name" jdbcType="VARCHAR"/>
+        <result column="sex" property="sex" jdbcType="VARCHAR"/>
+        <result column="year" property="year" jdbcType="VARCHAR"/>
+        <result column="major" property="major" jdbcType="VARCHAR"/>
+    </resultMap>
+    <resultMap id="ClzMap" type="Clz">
+        <id column="id" property="id" jdbcType="INTEGER"/>
+        <result column="name" property="name" jdbcType="VARCHAR"/>
+        <result column="time" property="time" jdbcType="VARCHAR"/>
+        <result column="credit" property="credit" jdbcType="INTEGER"/>
+        <result column="belong" property="belong" jdbcType="VARCHAR"/>
+        <result column="place" property="place" jdbcType="VARCHAR"/>
+        <result column="amount" property="amount" jdbcType="INTEGER" />
+        <result column="detail" property="detail" jdbcType="VARCHAR" />
+        <result column="selected" property="selected" jdbcType="INTEGER"/>
+    </resultMap>
+    <resultMap id="StudyMap" type="StudyInfo">
+        <id column="id" property="id" jdbcType="INTEGER"/>
+        <result column="s_id" property="s_id" jdbcType="VARCHAR"/>
+        <result column="s_name" property="s_name" jdbcType="VARCHAR"/>
+        <result column="s_major" property="s_major" jdbcType="VARCHAR"/>
+        <result column="c_id" property="c_id" jdbcType="INTEGER"/>
+        <result column="c_name" property="c_name" jdbcType="VARCHAR"/>
+        <result column="c_belong" property="c_belong" jdbcType="VARCHAR"/>
+        <result column="clb_manager" property="clb_manager" jdbcType="VARCHAR"/>
+        <result column="clb_tel" property="clb_tel" jdbcType="VARCHAR"/>
+        <result column="c_credit" property="c_credit" jdbcType="INTEGER"/>
+        <result column="c_time" property="c_time" jdbcType="VARCHAR"/>
+    </resultMap>
+    <select id="selectById" resultMap="AdminMap" parameterType="java.util.Map">
+        SELECT * FROM admin WHERE id=#{id}
+    </select>
+
+    <select id="selectAllStudents" resultMap="StudentMap" >
+        SELECT * FROM student ORDER BY id
+    </select>
+
+    <select id="selectAllCourses" resultMap="ClzMap" >
+        SELECT * FROM course
+    </select>
+
+    <select id="selectStuById" resultMap="StudentMap" parameterType="java.util.Map" >
+        SELECT * FROM student WHERE id=${id};
+    </select>
+
+    <select id="selectClzById" resultMap="ClzMap" parameterType="java.util.Map">
+        SELECT * FROM course WHERE id=${id};
+    </select>
+
+    <update id="updateStudent" parameterType="java.util.Map">
+        UPDATE student
+        <set>
+            <if test="s.name != null" >
+                name = #{s.name,jdbcType=VARCHAR},
+            </if>
+            <if test="s.pwd != null" >
+                pwd = #{s.pwd,jdbcType=VARCHAR},
+            </if>
+            <if test="s.sex != null" >
+                sex = #{s.sex,jdbcType=INTEGER},
+            </if>
+            <if test="s.year != null" >
+                year = #{s.year,jdbcType=VARCHAR},
+            </if>
+            <if test="s.major != null" >
+                major = #{s.major,jdbcType=VARCHAR},
+            </if>
+        </set>
+        WHERE id=#{s.id,jdbcType=VARCHAR}
+    </update>
+
+    <insert id="insertClz" parameterType="Clz">
+        INSERT INTO course (name,time,credit,belong,place,amount,detail,selected)
+        VALUES (#{name,jdbcType=VARCHAR},#{time,jdbcType=VARCHAR},#{credit,jdbcType=VARCHAR},
+        #{belong,jdbcType=VARCHAR},#{place,jdbcType=VARCHAR},#{amount,jdbcType=INTEGER},#{detail,jdbcType=VARCHAR},#{selected,jdbcType=INTEGER})
+    </insert>
+
+    <insert id="insertStudent" parameterType="Student">
+        INSERT INTO student (id,pwd,name,sex,year,major)
+        VALUES (#{id,jdbcType=VARCHAR},#{pwd,jdbcType=VARCHAR},#{name,jdbcType=VARCHAR},
+        #{sex,jdbcType=VARCHAR},#{year,jdbcType=VARCHAR},#{major,jdbcType=VARCHAR})
+    </insert>
+
+    <delete id="delStudent" parameterType="java.util.Map">
+        DELETE FROM student WHERE id=${id}
+    </delete>
+
+    <delete id="delCourse" parameterType="java.util.Map">
+        DELETE FROM course WHERE id=${id}
+    </delete>
+
+    <select id="selectAllStudyInfo" resultType="StudyInfo">
+        SELECT * FROM study ORDER BY c_id;
+    </select>
+
+    <insert id="insertStudyInfo" parameterType="StudyInfo">
+        INSERT INTO study (s_id,s_name,s_major,c_id,c_name,c_belong,c_credit,c_time)
+        VALUES (#{s_id},#{s_name},#{s_major},#{c_id},#{c_name},#{c_belong},#{c_credit},#{c_time})
+    </insert>
+
+    <delete id="delStudyInfo" parameterType="java.util.Map">
+        DELETE FROM study WHERE id=#{id}
+    </delete>
+
+    <select id="selectByStudyId" parameterType="java.util.Map" resultType="StudyInfo">
+        SELECT * FROM study WHERE id=${id};
+    </select>
+
+    <delete id="delStudyInfoByCId" parameterType="java.util.Map">
+        DELETE FROM study WHERE c_id=${id}
+    </delete>
+
+    <delete id="delStudyInfoBySId" parameterType="java.util.Map">
+        DELETE FROM study WHERE s_id=${id}
+    </delete>
+
+</mapper>

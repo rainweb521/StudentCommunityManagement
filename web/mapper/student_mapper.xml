@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="Student">
+    <resultMap id="StudentMap" type="Student">
+        <id column="id" property="id" jdbcType="VARCHAR"/>
+        <result column="pwd" property="pwd" jdbcType="VARCHAR"/>
+        <result column="name" property="name" jdbcType="VARCHAR"/>
+        <result column="sex" property="sex" jdbcType="VARCHAR"/>
+        <result column="year" property="year" jdbcType="VARCHAR"/>
+        <result column="major" property="major" jdbcType="VARCHAR"/>
+    </resultMap>
+    <sql id="Base_Column_List">
+        id,pwd,name,sex,year,major
+    </sql>
+
+    <select id="selectById" resultMap="StudentMap" parameterType="java.util.Map" resultType="Student">
+        SELECT <include refid="Base_Column_List" />
+        FROM student WHERE id = ${id}
+    </select>
+
+    <update id="update" parameterType="Student">
+        UPDATE student
+        <set >
+            pwd=#{pwd,jdbcType=VARCHAR}
+        </set>
+        where id = #{id,jdbcType=INTEGER}
+    </update>
+</mapper>
